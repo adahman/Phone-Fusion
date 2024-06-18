@@ -68,7 +68,6 @@ const deletePhone = async (id) => {
 };
 
 
-
 //ORDERS
 const getAllOrders = async () => {
     const response = await client.query(`SELECT * FROM "Orders" ORDER BY id ASC`);

@@ -4,7 +4,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import AboutPage from "./pages/AboutPage";
-import DefaultPhonePage from "./pages/DefaultPhonePage";
+import  DefaultPhonePage from "./pages/DefaultPhonePage";
 import SinglePhonePage from "./pages/SinglePhonePage";
 import NavBar from "./components/NavBar";
 import VideoModal from "./components/VideoModal";

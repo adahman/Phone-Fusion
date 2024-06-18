@@ -1,3 +1,5 @@
+
+
 const express = require("express");
 const router = express.Router();
 const {
@@ -7,6 +9,8 @@ const {
   updatePhone,
   deletePhone,
 } = require("../db/db");
+
+
 
 //route for all phones
 router.get("/", async (req, res, next) => {
@@ -72,4 +76,10 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
+
+//displaying phones on page
+
+
+
+ 
 module.exports = router;

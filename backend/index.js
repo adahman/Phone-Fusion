@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const {client} = require("./db/db");
 const baseQuery = "/api";
+const cors = require("cors");
+
+app.use(cors());
 
 
 app.use(express.json());

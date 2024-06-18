@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const isLoggedIn = require("./users")
 const {
   getAllPhones,
   getPhonebyId,
@@ -34,7 +35,7 @@ router.get("/:id", async (req, res, next) => {
 });
 
 //adding a new phone
-router.post("/", async (req, res, next) => {
+router.post("/", isLoggedIn, async (req, res, next) => {
   try {
     const newPhone = await createPhone(req.body);
     res.status(201).json(newPhone);
@@ -45,7 +46,7 @@ router.post("/", async (req, res, next) => {
 
 
 //updating a phone
-router.put("/:id", async (req, res, next) => {
+router.put("/:id", isLoggedIn, async (req, res, next) => {
   try {
     const updatedPhone = await updatePhone(req.params.id, req.body);
     if (updatedPhone) {
@@ -59,7 +60,7 @@ router.put("/:id", async (req, res, next) => {
 });
 
 //deleting a phone
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", isLoggedIn, async (req, res, next) => {
   try {
     const deletedPhone = await deletePhone(req.params.id);
     if (deletedPhone) {

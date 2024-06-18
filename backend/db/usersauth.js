@@ -4,15 +4,15 @@ const jwt = require("jsonwebtoken");
 
 const JWT = 'shhhhhhhh'
 
-const createUser = async({username, password})=>{
-    const response = await client.query(`INSERT INTO "User"(username, password) 
-        VALUES($1, $2) RETURNING *`,
-        [username, await bcrypt.hash(password, 5)]);
+const createUser = async({username, password, email})=>{
+    const response = await client.query(`INSERT INTO "Users"(username, password, email) 
+        VALUES($1, $2, $3) RETURNING *`,
+        [username, await bcrypt.hash(password, 5), email]);
     return response.rows[0]
 }
 
-const createUserAndGenerateToken = async({username, password})=>{
-    const user = await createUser({username, password});
+const createUserAndGenerateToken = async({username, password, email})=>{
+    const user = await createUser({username, password, email});
     const token = await  jwt.sign({id: user.id}, JWT)
     return {
         user,
@@ -22,7 +22,7 @@ const createUserAndGenerateToken = async({username, password})=>{
 
 const authenticate = async({username, password})=>{
     const response = await client.query(`SELECT id, username, 
-            password FROM "User" WHERE username=$1`, [username]);
+            password FROM "Users" WHERE username=$1`, [username]);
     if(!response.rows.length||(await bcrypt.compare(password, response.rows[0].password))===false){
         const error = Error("not authorized")
         error.status = 401;
@@ -50,7 +50,7 @@ const findUserWithToken = async (token)=>{
     }
 
     const response = await client.query(`SELECT id, username 
-            FROM "User" WHERE id=$1`, [id]);
+            FROM "Users" WHERE id=$1`, [id]);
 
     if(!response.rows.length){
         const error = Error("not authorized")

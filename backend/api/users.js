@@ -5,7 +5,6 @@ const router = express.Router();
 const {
   getAllUsers, 
   getSingleUserById,
-  getUserByUsername,
 }= require("../db/db");
 
 const {
@@ -13,42 +12,14 @@ const {
   authenticate, 
   findUserWithToken} = require("../db/usersauth")
 
-//all users
-router.get("/", async (req, res, next) => {
-  try {
-    res.send(await getAllUsers());
-  } catch (err) {
-    next(err);
-  }
-});
-
-
-//single user by id
-router.get("/:id", async (req, res, next) => {
-  try {
-    res.send(await getSingleUserById(req.params.id));
-  } catch (err) {
-    next(err);
-  }
-});
-
-//getting user by username
-router.get("/:username", async (req, res, next) => {
-  try {
-    res.send(await getUserByUsername(req.params.id));
-  } catch (err) {
-    next(err);
-  }
-});
-
 
 const isLoggedIn = async(req,res,next)=>{
-    try{
-        req.user = await findUserWithToken(req.headers.authorization);
-        next();
-    }catch(err){
-        next(err)
-    }
+  try{
+      req.user = await findUserWithToken(req.headers.authorization);
+      next();
+  }catch(err){
+      next(err)
+  }
 }
 
 router.post("/register", async(req,res,next)=>{
@@ -74,5 +45,34 @@ router.get('/me', isLoggedIn, (req,res,next)=>{
         next(err);
     }
 })
+
+
+//all users
+router.get("/", authenticate, isLoggedIn, async (req, res, next) => {
+  try {
+    res.send(await getAllUsers());
+  } catch (err) {
+    next(err);
+  }
+});
+
+
+//single user by id
+router.get("/:id", authenticate, isLoggedIn, async (req, res, next) => {
+  try {
+    res.send(await getSingleUserById(req.params.id));
+  } catch (err) {
+    next(err);
+  }
+});
+
+// //getting user by username
+// router.get("/:username", async (req, res, next) => {
+//   try {
+//     res.send(await getUserByUsername(req.params.id));
+//   } catch (err) {
+//     next(err);
+//   }
+// });
 
 module.exports = router;

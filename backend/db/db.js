@@ -118,6 +118,18 @@ const deleteCartByUserId = async(id) => {
     };
 };
 
+
+const checkOut = async (body) => {
+    await client.query(
+      `INSERT INTO "Orders"(phone_id, user_id) VALUES($1, $2)`,
+      [body.phone_id, body.user_id]
+    );
+    return {
+      phone_id: body.phone_id,
+      user_id: body.user_id,
+    };
+  };
+
 module.exports = {
     getUserByUsername,
     getAllUsers,
@@ -133,5 +145,6 @@ module.exports = {
     getCartByUserId,
     addCartByUserId,
     deleteCartByUserId,
+    checkOut,
     client,
 };

@@ -5,14 +5,14 @@ const client = new pg.Client("postgres://localhost/PhoneFusion");
 
 //Getting aLl users:
 const getAllUsers = async () => {
-    const response = await client.query(`SELECT * FROM "User"" ORDER BY id ASC`);
+    const response = await client.query(`SELECT * FROM "Users"" ORDER BY id ASC`);
     return response.rows;
 };
 
 
 //Getting a single user:
 const getSingleUserById = async (id) => {
-    const response = await client.query(`SELECT * FROM "User" WHERE id = $1`, [
+    const response = await client.query(`SELECT * FROM "Users" WHERE id = $1`, [
         id,
     ]);
     return response.rows[0];
@@ -20,7 +20,7 @@ const getSingleUserById = async (id) => {
 
 //Getting a user by username:
 const getUserByUsername = async (username) => {
-    const response = await client.query(`SELECT * FROM "User" WHERE username = $1`, [username]);
+    const response = await client.query(`SELECT * FROM "Users" WHERE username = $1`, [username]);
     return response.rows[0];
 };
 
@@ -63,7 +63,7 @@ const updatePhone = async (id, phone) => {
 
 //Deleting a phone
 const deletePhone = async (id) => {
-    await client.query(`DELETE FROM "Phone" WHERE id = $1`, [id]);
+    await client.query(`DELETE FROM "Phones" WHERE id = $1`, [id]);
     return { id };
 };
 
@@ -83,8 +83,41 @@ const getSingleOrderById = async (id) => {
 
 
 
-  
-  
+//Cart
+const getAllCart = async() => {
+    const response = await client.query(`SELECT * FROM "Cart" ORDER BY id ASC`);
+    return response.rows;
+};
+
+const getCartByUserId = async(params_id)=> {
+    const cart_res = await client.query(`SELECT * FROM "Cart" WHERE user_id = $1`,
+    [params_id]);
+    return {
+        cart: cart_res.rows,
+    };
+};
+
+const addCartByUserId = async(body) => {
+    await client.query(`INSERT INTO "Cart"(phone_id, user_id) VALUES($1, $2)`,[
+        body.phone_id,
+        body.user_id,
+    ]);
+    return {
+        phone_id: body.phone_id,
+        user_id: body.user_id,
+    };
+};
+
+
+const deleteCartByUserId = async(id) => {
+    await client.query(`DELETE FROM "Cart" WHERE id = $1`,[
+        Number(id)
+    ]);
+    return{
+        id: id,
+    };
+};
+
 module.exports = {
     getUserByUsername,
     getAllUsers,
@@ -96,5 +129,9 @@ module.exports = {
     deletePhone,
     getAllOrders,
     getSingleOrderById,
+    getAllCart,
+    getCartByUserId,
+    addCartByUserId,
+    deleteCartByUserId,
     client,
 };

@@ -4,11 +4,6 @@ import {useState, useEffect} from "react";
 
 
 
-
-
-
-
-
 function DefaultPhonePage() {
 
   const[phones, setPhones] = useState([]);

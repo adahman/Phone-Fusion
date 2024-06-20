@@ -11,8 +11,8 @@ const createUser = async({username, password, email})=>{
     return response.rows[0]
 }
 
-const createUserAndGenerateToken = async({username, password, email})=>{
-    const user = await createUser({username, password, email});
+const createUserAndGenerateToken = async({username, email, password})=>{
+    const user = await createUser({username, email, password});
     const token = await  jwt.sign({id: user.id}, JWT)
     return {
         user,

@@ -7,7 +7,7 @@ const {
     getSingleOrderById,
 } = require("../db/db")
 
-router.get("/", async (req, res, next) => {
+router.get("/", isLoggedIn, async (req, res, next) => {
     try {
       res.send(await getAllOrders());
     } catch (err) {
@@ -15,7 +15,7 @@ router.get("/", async (req, res, next) => {
     }
   });
 
-  router.get("/:id", async (req, res, next) => {
+  router.get("/:id", isLoggedIn, async (req, res, next) => {
     try {
       res.send(await getSingleOrderById(req.params.id));
     } catch (err) {

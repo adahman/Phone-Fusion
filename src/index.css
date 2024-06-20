@@ -39,3 +39,42 @@ main {
   padding-top: 2rem;
   color: white;
 }
+
+
+#phones{
+ display: flex;
+ flex-direction: column;
+  padding: 50px; 
+ justify-content: space-around;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 1rem;
+  align-items: center;
+  width:500px;
+  height: 600px;
+  border: solid 5px black;
+  float: left;
+ margin-left: 0px;
+ margin-right: 5px;
+  
+
+}
+
+#phones img{
+  width: 250px;
+  height: 330px;
+  
+}
+
+#about{
+  color: white;
+  border: solid black 5px;
+  background-color: rgba(0, 0, 0, 0.7) ;
+}
+
+#brand{
+  color: orange;
+}
+
+@media screen and (max-width: 600px) {
+  
+}

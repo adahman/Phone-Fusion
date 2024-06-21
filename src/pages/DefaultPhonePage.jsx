@@ -1,47 +1,40 @@
-
-import {useState, useEffect} from "react";
-
-
-
+import { useState, useEffect } from "react";
 
 function DefaultPhonePage() {
+  const [phones, setPhones] = useState([]);
 
-  const[phones, setPhones] = useState([]);
-  
   async function getAllPhones() {
     const response = await fetch("http://localhost:8080/api/phones");
     const jsonresponse = await response.json();
+
     console.log(jsonresponse);
     setPhones(jsonresponse);
   }
 
   useEffect(() => {
     getAllPhones();
-  }, [])
+  }, []);
 
-
-  return(
+  return (
     <div id="phonesWrapper">
-    <div></div>
-    {phones && (
-      phones.map(phones=>
-        <div key={phones} id="phones">
-        <h3 key={phones} >{phones.name}</h3>
-        <p key={phones} >{phones.brand}</p>
-        <img id="pics" key={phones}  src={phones.imgUrL} alt={phones.name} />
-        <h2 key={phones} >Price:{phones.price}</h2>
-        <p key={phones} >Screen Size:{phones.screen_size} Camera Resolution:{phones.camera_res}</p>
-        <button key={phones} id="addToCart" onClick={()=>alert("Added to Cart!")}>Add to Cart</button>
-        
-        
-        </div>
-      )
-  )}
-  </div>
- 
-  )
-  
+      {phones &&
+        phones.map((phone) => (
+          <div key={phone.id} id="phone">
+            <h3>{phone.name}</h3>
+            <p>{phone.brand}</p>
+            <img id="pics" src={phone.imgUrl} alt={phone.name} />
+            <h2>Price: ${phone.price}</h2>
+            <p>
+              Screen Size: {phone.screen_size}in. Camera Resolution:{" "}
+              {phone.camera_res}
+            </p>
+            <button id="addToCart" onClick={() => alert("Added to Cart!")}>
+              Add to Cart
+            </button>
+          </div>
+        ))}
+    </div>
+  );
 }
 
-
-export default  DefaultPhonePage;
+export default DefaultPhonePage;

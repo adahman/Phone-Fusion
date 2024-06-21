@@ -1,53 +1,55 @@
 const express = require("express");
 const router = express.Router();
 
-
 const {
-  getAllUsers, 
+  getAllUsers,
   getSingleUserById,
   deleteUser,
   updateUser,
-}= require("../db/db");
+} = require("../db/db");
 
 const {
   createUserAndGenerateToken,
-  authenticate, 
-  findUserWithToken} = require("../db/usersauth")
+  authenticate,
+  findUserWithToken,
+} = require("../db/usersauth");
 
-
-const isLoggedIn = async(req,res,next)=>{
-  try{
-      req.user = await findUserWithToken(req.headers.authorization);
-      next();
-  }catch(err){
-      next(err)
+const isLoggedIn = async (req, res, next) => {
+  try {
+    req.user = await findUserWithToken(req.headers.authorization);
+    next();
+  } catch (err) {
+    next(err);
   }
-}
+};
 
-router.post("/register", async(req,res,next)=>{
-    try{
-        res.send(await createUserAndGenerateToken(req.body))
-    }catch(err){
-        next(err)
-    }
-})
+router.post("/register", async (req, res, next) => {
+  try {
+    res.send(await createUserAndGenerateToken(req.body));
+  } catch (err) {
+    next(err);
+  }
+});
 
-router.post("/login", async(req,res,next)=>{
-    try{
-        res.send(await authenticate(req.body))
-    }catch(err){
-        next(err)
-    }
-})
+router.post("/login", async (req, res, next) => {
+  try {
+    console.log("Login request:", req.body);
+    const { username, password } = req.body;
+    const { user, token } = await authenticate({ username, password });
+    res.json({ user, token });
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(err.status || 500).json({ error: err.message });
+  }
+});
 
-router.get('/me', isLoggedIn, (req,res,next)=>{
-    try{
-        res.send(req.user)
-    }catch(err){
-        next(err);
-    }
-})
-
+router.get("/me", isLoggedIn, (req, res, next) => {
+  try {
+    res.send(req.user);
+  } catch (err) {
+    next(err);
+  }
+});
 
 //all users
 router.get("/", authenticate, isLoggedIn, async (req, res, next) => {
@@ -57,7 +59,6 @@ router.get("/", authenticate, isLoggedIn, async (req, res, next) => {
     next(err);
   }
 });
-
 
 //single user by id
 router.get("/:id", authenticate, isLoggedIn, async (req, res, next) => {
@@ -76,7 +77,6 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-
 router.put("/:id", async (req, res, next) => {
   try {
     res.send(await updateUser(req.params.id, req.body));
@@ -84,7 +84,5 @@ router.put("/:id", async (req, res, next) => {
     next(err);
   }
 });
-
-
 
 module.exports = router;

@@ -4,10 +4,10 @@ const jwt = require("jsonwebtoken");
 
 const JWT = 'shhhhhhhh'
 
-const createUser = async({username, password, email})=>{
-    const response = await client.query(`INSERT INTO "Users"(username, password, email) 
+const createUser = async({username, email, password})=>{
+    const response = await client.query(`INSERT INTO "Users"(username, email, password) 
         VALUES($1, $2, $3) RETURNING *`,
-        [username, await bcrypt.hash(password, 5), email]);
+        [username, email, await bcrypt.hash(password, 5)]);
     return response.rows[0]
 }
 
@@ -62,8 +62,18 @@ const findUserWithToken = async (token)=>{
 
 }
 
+const updateUser = async (id, user) => {
+    const { username, email, password } = user;
+    const response = await client.query(
+        `UPDATE "Users" SET username = $1, email = $2, password = $3,  WHERE id = $4 RETURNING *`,
+        [ username, email, password, id]
+    );
+    return response.rows[0];
+};
+
 module.exports ={
     authenticate,
     createUserAndGenerateToken,
-    findUserWithToken
+    findUserWithToken,
+    updateUser
 }

@@ -49,6 +49,14 @@ router.delete("/:id", isLoggedIn, async (req, res) => {
     }
 });
 
+router.put("/:id", async (req, res, next) =>{
+    try{
+        res.send(await updateCart(req.params.id))
+    }catch(err){
+        next(err);
+    }
+});
+
 
 
 module.exports = router;

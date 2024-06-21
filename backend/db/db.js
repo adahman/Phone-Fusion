@@ -24,8 +24,21 @@ const getUserByUsername = async (username) => {
     return response.rows[0];
 };
 
+//deleting a user
+const deleteUser = async(id) =>{
+    await client.query(`DELETE FROM "Users" WHERE id =$1`,[id]);
+    return {id};
+};
 
-  
+//update user
+const updateUser = async (id, user) => {
+    const { username, email, password } = user;
+    const response = await client.query(
+        `UPDATE "Users" SET username = $1, email = $2, password = $3 WHERE id = $4 RETURNING *`,
+        [username, email, password, id]
+    );
+    return response.rows[0];
+};
 
 //Getting all phones:
 const getAllPhones = async () => {
@@ -38,7 +51,9 @@ const getPhonebyId = async (id) => {
     const response = await client.query(`SELECT * FROM "Phones" WHERE id = $1`, [id]);
     return response.rows[0];
 };
-  
+
+
+
 
 //Creating a phone
 const createPhone = async (phone) => {
@@ -81,6 +96,35 @@ const getSingleOrderById = async (id) => {
     return response.rows[0];
 };
 
+const deleteOrderById = async (id) => {
+    await client.query(`DELETE FROM "Orders" WHERE id = $1`, [Number(id)]);
+    return {
+        id: id,
+    };
+};
+
+
+const addOrderByUserId = async(body) => {
+    await client.query(`INSERT INTO "Orders"(user_id, status, created_at) VALUES($1, $2, now())`, [
+        body.user_id,
+        body.status,
+        body.created_at
+    ]);
+    return {
+        user_id: body.user_id,
+        status: body.status,
+        created_at: body.created_at
+      };
+};
+
+const updateOrder = async (id, order) => {
+    const { order_id, phone_id, quantity } = order;
+    const response = await client.query(
+        `UPDATE "Orders" SET order_id = $1, phone_id = $2, quantity = $3 WHERE id = $4 RETURNING *`,
+        [order_id, phone_id, quantity, id]
+    );
+    return response.rows[0];
+};
 
 
 //Cart
@@ -98,13 +142,17 @@ const getCartByUserId = async(params_id)=> {
 };
 
 const addCartByUserId = async(body) => {
-    await client.query(`INSERT INTO "Cart"(phone_id, user_id) VALUES($1, $2)`,[
+    await client.query(`INSERT INTO "Cart"(phone_id, order_id, user_id, quantity) VALUES($1, $2)`,[
         body.phone_id,
+        body.order_id,
         body.user_id,
+        body.quantity
     ]);
     return {
         phone_id: body.phone_id,
+        order_id: body.order_id,
         user_id: body.user_id,
+        quantity: body.quantity
     };
 };
 
@@ -118,21 +166,36 @@ const deleteCartByUserId = async(id) => {
     };
 };
 
+const updateCart = async(id, cart) =>{
+    const {order_id, phone_id, quantity} = cart;
+    const response = await client.query(
+        `UPDATE "Cart" SET order_id = $1, phone_id = $2, quantity =$3 WHERE id = $4 RETURNING *`,
+        [order_id, phone_id, quantity, id]
+    );    
+    return response.rows[0];
+}
 
 const checkOut = async (body) => {
     await client.query(
-      `INSERT INTO "Orders"(phone_id, user_id) VALUES($1, $2)`,
-      [body.phone_id, body.user_id]
+      `INSERT INTO "Orders"(phone_id, order_id, user_id, quantity) VALUES($1, $2, $3, $4)`,
+      [body.phone_id,
+        body.order_id,
+        body.user_id,
+        body.quantity]
     );
     return {
       phone_id: body.phone_id,
+      order_id: body.order_id,
       user_id: body.user_id,
+      quantity: body.quantity
     };
   };
 
 module.exports = {
     getUserByUsername,
     getAllUsers,
+    deleteUser,
+    updateUser,
     getAllPhones,
     getSingleUserById,
     getPhonebyId,
@@ -141,10 +204,14 @@ module.exports = {
     deletePhone,
     getAllOrders,
     getSingleOrderById,
+    deleteOrderById,
+    addOrderByUserId,
+    updateOrder,
     getAllCart,
     getCartByUserId,
     addCartByUserId,
     deleteCartByUserId,
+    updateCart,
     checkOut,
     client,
 };

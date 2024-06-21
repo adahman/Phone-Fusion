@@ -5,6 +5,8 @@ const router = express.Router();
 const {
   getAllUsers, 
   getSingleUserById,
+  deleteUser,
+  updateUser,
 }= require("../db/db");
 
 const {
@@ -66,13 +68,23 @@ router.get("/:id", authenticate, isLoggedIn, async (req, res, next) => {
   }
 });
 
-// //getting user by username
-// router.get("/:username", async (req, res, next) => {
-//   try {
-//     res.send(await getUserByUsername(req.params.id));
-//   } catch (err) {
-//     next(err);
-//   }
-// });
+router.delete("/:id", async (req, res, next) => {
+  try {
+    res.send(await deleteUser(req.params.id));
+  } catch (err) {
+    next(err);
+  }
+});
+
+
+router.put("/:id", async (req, res, next) => {
+  try {
+    res.send(await updateUser(req.params.id, req.body));
+  } catch (err) {
+    next(err);
+  }
+});
+
+
 
 module.exports = router;

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const isLoggedIn = require("./users")
+const isLoggedIn = require("./users");
 const {
   getAllPhones,
   getPhonebyId,
@@ -18,7 +18,6 @@ router.get("/", async (req, res, next) => {
     next(err);
   }
 });
-
 
 //route for single phone by id:
 router.get("/:id", async (req, res, next) => {
@@ -43,7 +42,6 @@ router.post("/", isLoggedIn, async (req, res, next) => {
     next(err);
   }
 });
-
 
 //updating a phone
 router.put("/:id", isLoggedIn, async (req, res, next) => {

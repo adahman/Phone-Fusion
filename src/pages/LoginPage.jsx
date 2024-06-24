@@ -1,7 +1,8 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import "./LoginPage.css";
 
-const LoginPage = () => {
+const LoginPage = ({ setIsLoggedIn }) => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -35,6 +36,7 @@ const LoginPage = () => {
       }
       const result = await response.json();
       localStorage.setItem("token", result.token);
+      setIsLoggedIn(true);
       alert("Login successful!");
       // Redirect or other actions
     } catch (error) {
@@ -67,6 +69,9 @@ const LoginPage = () => {
 
         <button type="submit">Login</button>
       </form>
+      <p>
+        Don't have an account? <Link to="/register">Register here</Link>
+      </p>
     </div>
   );
 };

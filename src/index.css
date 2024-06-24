@@ -12,6 +12,9 @@ body {
 nav {
   background-color: rgba(0, 0, 0, 0.7);
   padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 nav ul {
@@ -32,6 +35,18 @@ nav ul li a {
 }
 
 nav ul li a:hover {
+  text-decoration: underline;
+}
+
+.logout-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.logout-button:hover {
   text-decoration: underline;
 }
 

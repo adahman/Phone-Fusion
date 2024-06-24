@@ -11,6 +11,7 @@ import "./index.css";
 
 const App = () => {
   const [showModal, setShowModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
 
   useEffect(() => {
     const isFirstVisit = localStorage.getItem("firstVisit") === null;
@@ -24,13 +25,21 @@ const App = () => {
     setShowModal(false);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+  };
+
   return (
     <Router>
-      <NavBar />
+      <NavBar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
       <main>
         <Routes>
           <Route path="/" element={<DefaultPhonePage />} />
-          <Route path="/login" element={<LoginPage />} />
+          <Route
+            path="/login"
+            element={<LoginPage setIsLoggedIn={setIsLoggedIn} />}
+          />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/phones" element={<DefaultPhonePage />} />
